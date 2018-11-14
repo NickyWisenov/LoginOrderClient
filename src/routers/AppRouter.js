@@ -9,11 +9,10 @@ const AppRouter = () => (
   <BrowserRouter>
     <div>
       <Switch>
-      <Route path="/" component={App} exact={true} />
+        <Route path="/" component={App} exact={true} />
         <Route path="/signup" component={SignupPage}/>
       </Switch>
     </div>
   </BrowserRouter>
 );
-
 export default AppRouter;

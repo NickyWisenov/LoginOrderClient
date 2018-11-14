@@ -1,15 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-
 class SignupForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this. state = {
+    this.state = {
       username: '',
       password: '',
-       errors: {}
+      errors: {}
     }; 
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,12 +24,11 @@ class SignupForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const user = {
-      email: this.state.email,
+      username: this.state.username,
       password: this.state.password,
     }
     this.props.onSignupRequest(this.state);
   };
-
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.errors) {
@@ -44,11 +42,12 @@ class SignupForm extends React.Component {
     const {errors} = this.state;
 
     return (
-      <form onSubmit={ this.handleSubmit }>
-      <h1>Please Sing In!!</h1>
+      <div className="signin-form">
+        <h1 className="signin-form-title">Please Sign In!</h1>
+        <form onSubmit={ this.handleSubmit }>
           <div className="form-group">
-          <label>Username</label>
-              <input
+            <label>Username</label>
+            <input
               type="text"
               className="form-control"
               name="username"
@@ -58,8 +57,8 @@ class SignupForm extends React.Component {
             {errors.username}
           </div>
           <div className="form-group">
-          <label>Password</label>
-              <input
+            <label>Password</label>
+            <input
               type="text"
               className="form-control"
               name="password"
@@ -71,9 +70,9 @@ class SignupForm extends React.Component {
           
           <div className="form-group">
             <button type="submit" className="btn btn-primary">Sign Up</button>
-
           </div>
         </form>
+      </div>
     );
   }
 }
@@ -81,7 +80,5 @@ class SignupForm extends React.Component {
 const mapStateToProps = (state) => ({
   errors: state.errors
 })
-
-
 
 export default connect(mapStateToProps)(SignupForm);

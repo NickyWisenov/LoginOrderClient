@@ -67,9 +67,8 @@ class SignupForm extends React.Component {
             />
           </div>
           {errors.password}
-          
           <div className="form-group">
-            <button type="submit" className="btn btn-primary">Sign Up</button>
+            <button type="submit" className="btn btn-primary">Sign In</button>
           </div>
         </form>
       </div>

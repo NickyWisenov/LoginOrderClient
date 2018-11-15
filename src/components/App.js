@@ -4,10 +4,9 @@ import NavigationBar from './NavigationBar'
 class App extends React.Component {
     render(){
         return(
-        <nav className="container">
-            <NavigationBar />
-            
-        </nav> 
+            <nav className="container">
+                <NavigationBar />
+            </nav> 
         )
     }
 }

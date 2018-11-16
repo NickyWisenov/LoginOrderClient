@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { GET_ERRORS } from './types';
 
 
@@ -8,7 +9,7 @@ export const userSignupRequest = ({username,password}) => {
   return (dispatch) => {
     return axios.post(`${apiUrl}/login`, {username,password})
       .then(response => {
-
+         console.log(response);
       })
       .catch((err) => {
         dispatch({

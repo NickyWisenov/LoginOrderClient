@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-class SignupForm extends React.Component {
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: '',
+      email: '',
       password: '',
       errors: {}
     }; 
@@ -24,7 +24,7 @@ class SignupForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const user = {
-      username: this.state.username,
+      email: this.state.email,
       password: this.state.password,
     }
     this.props.onSignupRequest(this.state);
@@ -33,42 +33,49 @@ class SignupForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps.errors) {
         this.setState({
-          errors: nextProps.errors
+            errors: nextProps.errors
         });
     }
 }
 
   render() {
     const {errors} = this.state;
-
+    console.log(this.state);
     return (
-      <div className="signin-form">
-        <h1 className="signin-form-title">Please Sign In!</h1>
+      <div className="login-form">
+        <h1 className="login-form-title">Please Log In!</h1>
         <form onSubmit={ this.handleSubmit }>
           <div className="form-group">
-            <label>Username</label>
+            <label>Email</label>
             <input
               type="text"
-              className="form-control"
-              name="username"
-              value={ this.state.username }
+              className={errors.email ? "form-control is-invalid" : "form-control"}
+              name="email"
+              value={ this.state.email }
               onChange={ this.handleChange }
+              placeholder="Please Insert your Email Here..."
             />
-            {errors.username}
+            <div className="invalid-feedback">
+                {errors.email}
+            </div>
           </div>
           <div className="form-group">
             <label>Password</label>
             <input
               type="text"
-              className="form-control"
+              className={errors.password ? "form-control is-invalid" : "form-control"}
               name="password"
               value={ this.state.password }
               onChange={ this.handleChange }
+              placeholder="Please Insert your Password Here..."
             />
+            <div className="invalid-feedback">
+                {errors.password}
+            </div>
           </div>
-          {errors.password}
+
           <div className="form-group">
-            <button type="submit" className="btn btn-primary">Sign In</button>
+            <button type="submit" className="btn btn-primary">Log In</button>
           </div>
         </form>
       </div>
@@ -80,4 +87,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 })
 
-export default connect(mapStateToProps)(SignupForm);
+export default connect(mapStateToProps)(LoginForm);

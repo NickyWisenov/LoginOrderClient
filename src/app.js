@@ -9,15 +9,14 @@ import rootReducer from './reducers';
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const store = createStore(
     rootReducer,
     compose(
-    applyMiddleware(thunk),
+        applyMiddleware(thunk),
         // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     )
-    
 )
 
 

@@ -1,17 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+
+// Import Component
+import NavigationBar from '../components/NavigationBar';
 import App from '../components/App';
 import SignupPage from '../components/signup/SignupPage';
+import LoginPage from '../components/login/LoginPage';
 
 
 
 const AppRouter = () => (
   <BrowserRouter>
     <div>
-      <Switch>
-        <Route path="/" component={App} exact={true} />
+      <NavigationBar />
+      <Route path="/" component={App} exact={true} />
+      <div className="container">
+        <Route path="/login" component={LoginPage} />
         <Route path="/signup" component={SignupPage}/>
-      </Switch>
+      </div>
     </div>
   </BrowserRouter>
 );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -27,20 +28,27 @@ class LoginForm extends React.Component {
       email: this.state.email,
       password: this.state.password,
     }
-    this.props.onSignupRequest(this.state);
+    this.props.onLoginRequest(this.state);
   };
 
+	componentDidMount() {
+		if (this.props.auth.isAuthenticated) {
+			this.props.history.push('/');
+		}
+	}
   componentWillReceiveProps(nextProps) {
+		if (nextProps.auth.isAuthenticated) {
+			this.props.history.push('/');
+		}
     if(nextProps.errors) {
         this.setState({
             errors: nextProps.errors
         });
     }
-}
+	}
 
   render() {
     const {errors} = this.state;
-    console.log(this.state);
     return (
       <div className="login-form">
         <h1 className="login-form-title">Please Log In!</h1>
@@ -56,7 +64,7 @@ class LoginForm extends React.Component {
               placeholder="Please Insert your Email Here..."
             />
             <div className="invalid-feedback">
-                {errors.email}
+							{errors.email}
             </div>
           </div>
           <div className="form-group">
@@ -74,7 +82,7 @@ class LoginForm extends React.Component {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group login-btn-div">
             <button type="submit" className="btn btn-primary">Log In</button>
           </div>
         </form>
@@ -83,8 +91,15 @@ class LoginForm extends React.Component {
   }
 }
 
+LoginForm.propTypes = {
+	onLoginRequest: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired
+}
+
 const mapStateToProps = (state) => ({
-  errors: state.errors
+	auth: state.auth,
+	errors: state.errors
 })
 
 export default connect(mapStateToProps)(LoginForm);

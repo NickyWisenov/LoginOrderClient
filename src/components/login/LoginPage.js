@@ -4,7 +4,7 @@ import LoginForm from './LoginForm'
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSignupRequest: userData => {
+    onLoginRequest: userData => {
       dispatch(userLoginRequest(userData));
     }
   };

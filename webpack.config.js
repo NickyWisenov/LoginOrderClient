@@ -20,7 +20,14 @@ module.exports = {
         'css-loader',
         'sass-loader'
       ]
-    }]
+    }],
+    loaders: [
+      { 
+        test: /\.(png|jpeg|jpg)$/,
+        include: path.join(__dirname, 'src/img'),
+        loader: 'url-loader' 
+      }
+    ]
   },
   devtool:'cheap-module-eval-source-map', 
   devServer: {

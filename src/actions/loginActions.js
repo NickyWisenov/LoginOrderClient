@@ -1,6 +1,7 @@
 import axios from 'axios';
-
-import { GET_ERRORS } from './types';
+import { GET_ERRORS, SET_CURRENT_USER } from './types';
+import setAuthToken from '../setAuthToken';
+import jwt_decode from 'jwt-decode';
 
 const apiUrl = 'http://127.0.0.1:4000/api/users';
 
@@ -8,9 +9,14 @@ export const userLoginRequest = ({email,password}) => {
     return (dispatch) => {
         return axios.post(`${apiUrl}/login`, {email,password})
             .then(response => {
-                console.log(response);
+                const { token } = response.data;
+                localStorage.setItem('jwtToken', token);
+                setAuthToken(token);
+                const decoded = jwt_decode(token);
+                dispatch(setCurrentUser(decoded));
             })
-            .catch((err) => {
+            .catch(err => {
+                console.log(err);
                 dispatch({
                     type: GET_ERRORS,
                     payload: err.response.data
@@ -19,4 +25,18 @@ export const userLoginRequest = ({email,password}) => {
     };
 };
 
+export const logoutUser = (history) => dispatch => {
+    localStorage.removeItem('jwtToken');
+    setAuthToken(false);
+    dispatch(setCurrentUser({}));
+    console.log(history);
+    history.push('/login');
+}
+
+export const setCurrentUser = decoded => {
+    return {
+        type: SET_CURRENT_USER,
+        payload: decoded
+    }
+}
 

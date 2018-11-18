@@ -33,16 +33,16 @@ class LoginForm extends React.Component {
 
 	componentDidMount() {
 		if (this.props.auth.isAuthenticated) {
-			this.props.history.push('/');
+			this.props.history.push('/welcome');
 		}
 	}
   componentWillReceiveProps(nextProps) {
 		if (nextProps.auth.isAuthenticated) {
-			this.props.history.push('/');
+			this.props.history.push('/welcome');
 		}
     if(nextProps.errors) {
         this.setState({
-            errors: nextProps.errors
+          errors: nextProps.errors
         });
     }
 	}

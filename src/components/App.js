@@ -1,6 +1,11 @@
 import React from 'react';
 
 class App extends React.Component {
+    
+    componentDidMount() {
+        console.log(this.props.auth);
+    }
+    
     render(){
         return(
             <div className="main-container">

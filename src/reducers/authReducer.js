@@ -3,7 +3,8 @@ import isEmpty from '../helper/is_empty';
 
 const initialState = {
     isAuthenticated: false,
-    user: {}
+    user: {},
+    locations: []
 }
 
 export default function (state = initialState, action) {
@@ -12,7 +13,8 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: !isEmpty(action.payload),
-                user: action.payload
+                user: action.payload,
+                locations: action.payload
             }
         default:
             return state;

@@ -7,7 +7,7 @@ export const  getMovies = () => {
     return (dispatch) => {
         return axios.post(`${apiUrl}/getmovies`)
             .then(response => {
-                dispatch(getMoviesList(response));
+                dispatch(getMoviesList(response.data));
             })
             .catch(err => {
                 console.log(err);

@@ -6,8 +6,6 @@ class WelcomePage extends React.Component {
 		super(props);
 
 		this.state = {
-			username: '',
-			password: '',
 			errors: {}
 		};
 
@@ -24,8 +22,9 @@ class WelcomePage extends React.Component {
 
 	render() {
 		const locationsList = this.props.auth.locations.locations.map(function(location){
-      return <li className="locations-list" key={location.city}>{location.city} - {location.country}</li>
-    })
+			return <li className="locations-list" key={location.city}>{location.city} - {location.country}</li>
+		});
+
 		return (
 			<div className="welcome-page">
 				<div className="welcome-banner">

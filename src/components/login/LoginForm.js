@@ -70,7 +70,7 @@ class LoginForm extends React.Component {
           <div className="form-group">
             <label>Password</label>
             <input
-              type="text"
+              type="password"
               className={errors.password ? "form-control is-invalid" : "form-control"}
               name="password"
               value={ this.state.password }

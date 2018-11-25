@@ -1,13 +1,16 @@
-import React from 'react';
+import { connect } from 'react-redux';
+import { getMovies } from '../../actions/orderActions';
+import OrderForm from './OrderForm'
 
-class OrderPage extends React.Component {
-    render() {
-        return (
-            <div>
-                Order Now
-            </div>
-        )
+const mapDispatchToProps = dispatch => {
+  return {
+    loadMovieList: () => {
+      dispatch(getMovies());
     }
-}
+  };
+};
 
-export default OrderPage;
+export default connect(
+  null,
+  mapDispatchToProps
+)(OrderForm);

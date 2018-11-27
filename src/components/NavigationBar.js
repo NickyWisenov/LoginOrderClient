@@ -16,23 +16,30 @@ class NaviationBar extends React.Component {
       return(
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <Link className="navbar-brand" to="/">Movie Order APP</Link>
-            {
-              isAuthenticated ? 
-                <Link className="nav-link" to="/order">Order</Link>
-                :
-                ""
-            }
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav ml-auto">
+              {
+                isAuthenticated ?
+                  <ul className="navbar-nav">
                     <li className="nav-item">
-                        {
-                          !isAuthenticated ? 
-                            <Link className="nav-link" to="/login">Login</Link>
-                            :
-                            <a href="#" className="nav-link" onClick={this.onLogout.bind(this)} >LogOut</a>
-                        }
+                      <Link className="nav-link" to="/order">Order</Link>
                     </li>
-                </ul>
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/orderlist">Order List</Link>
+                    </li>
+                  </ul>
+                  :
+                  ""
+              }
+              <ul className="navbar-nav ml-auto">
+                  <li className="nav-item">
+                      {
+                        !isAuthenticated ? 
+                          <Link className="nav-link" to="/login">Login</Link>
+                          :
+                          <a href="#" className="nav-link" onClick={this.onLogout.bind(this)} >LogOut</a>
+                      }
+                  </li>
+              </ul>
             </div>
         </nav>
       );

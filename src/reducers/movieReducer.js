@@ -1,7 +1,8 @@
-import { GET_MOVIES } from '../actions/types';
+import { GET_MOVIES, ON_SUCCEED_ORDER } from '../actions/types';
 
 const initialState = {
-    movies: []
+    movies: [],
+    ordered: false
 }
 
 export default function ( state = initialState, action ) {
@@ -10,6 +11,11 @@ export default function ( state = initialState, action ) {
             return {
                 ...state,
                 movies: action.payload
+            }
+        case ON_SUCCEED_ORDER:
+            return {
+                ...state,
+                ordered: true
             }
         default:
             return state;

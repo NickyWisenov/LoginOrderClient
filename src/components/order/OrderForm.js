@@ -71,9 +71,11 @@ class OrderForm extends React.Component {
                 location: this.locationRef.value,
                 moviesList: moviesList,
                 totalPrice: this.state.totalPrice,
+                orderedBy: this.props.auth.user.id,
                 comment: document.getElementById('comment').value,
             }
 
+            this.props.onSaveOrder(orderData);
         }
     }
 
@@ -82,11 +84,15 @@ class OrderForm extends React.Component {
             locationError: ""
         })
     }
+
     componentWillMount () {
         this.props.loadMovieList();
+
+
     }
 
     componentWillReceiveProps(nextProps) {
+
         if(nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
@@ -155,15 +161,12 @@ class OrderForm extends React.Component {
             <div className="order-form">
                 <form id="orderForm">
                     <h1>Order Movie</h1>
-
                     {/* Locations Select */}
                     <div className="form-group row">
                         <label className="col-sm-4 col-form-label" htmlFor="inlineFormCustomSelect">Locations</label>
                         {
                             renderLocationSelect()
                         }
-
-                        
                     </div>
                     {
                         this.state.locationError !== "" ? (
@@ -182,9 +185,7 @@ class OrderForm extends React.Component {
                     {
                         renderMovieList()
                     }
-
                     <hr />
-
                     {/* Total Price */}
                     <div className="form-group row">
                         <label htmlFor="total-price" className="col-sm-4 col-form-label"><strong>Total Price</strong></label>
@@ -220,15 +221,16 @@ class OrderForm extends React.Component {
 
 OrderForm.propTypes = {
     loadMovieList: PropTypes.func.isRequired,
+    onSaveOrder: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
-    movies: PropTypes.object.isRequired
+    movies: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
     errors: state.errors,
-    movies: state.movies
+    movies: state.movies,
 });
 
 export default connect(mapStateToProps)(OrderForm);

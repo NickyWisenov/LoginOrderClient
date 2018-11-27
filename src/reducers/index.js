@@ -7,5 +7,5 @@ import movieReducer from './movieReducer';
 export default combineReducers({
     errors: errorReducer,
     auth: authReducer,
-    movies: movieReducer
+    movies: movieReducer,
 });

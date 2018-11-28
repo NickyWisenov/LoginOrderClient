@@ -8,6 +8,7 @@ import SignupPage from '../components/signup/SignupPage';
 import LoginPage from '../components/login/LoginPage';
 import WelcomePage from '../components/welcome/WelcomePage';
 import OrderPage from '../components/order/OrderPage';
+import OrderList from '../components/orderList/OrderList';
 
 const AppRouter = () => (
   <BrowserRouter history={history}>
@@ -19,6 +20,7 @@ const AppRouter = () => (
         <Route path="/signup" component={SignupPage} />
         <Route path="/welcome" component={WelcomePage} />
         <Route path="/order" component={OrderPage} />
+        <Route path="/orderlist" component={OrderList} />
       </div>
     </div>
   </BrowserRouter>

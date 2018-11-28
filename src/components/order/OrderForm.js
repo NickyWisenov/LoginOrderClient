@@ -87,11 +87,16 @@ class OrderForm extends React.Component {
 
     componentWillMount () {
         this.props.loadMovieList();
-
-
+        if (this.props.movies.ordered) {
+            this.props.history.push('/orderlist');
+        }
     }
 
     componentWillReceiveProps(nextProps) {
+        
+        if (nextProps.movies.ordered) {
+            this.props.history.push('/orderlist');
+        }
 
         if(nextProps.errors) {
             this.setState({

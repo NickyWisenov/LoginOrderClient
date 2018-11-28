@@ -1,4 +1,4 @@
-import { GET_MOVIES, ON_SUCCEED_ORDER } from '../actions/types';
+import { GET_MOVIES, GET_ORDERED } from '../actions/types';
 
 const initialState = {
     movies: [],
@@ -12,10 +12,10 @@ export default function ( state = initialState, action ) {
                 ...state,
                 movies: action.payload
             }
-        case ON_SUCCEED_ORDER:
+        case GET_ORDERED:
             return {
                 ...state,
-                ordered: true
+                ordered: action.payload
             }
         default:
             return state;

@@ -1,3 +1,7 @@
 export const GET_ERRORS = 'GET_ERRORS';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 export const GET_MOVIES = 'GET_MOVIES';
+export const GET_ORDERED = 'GET_ORDERED';
+export const GET_ORDERS = 'GET_ORDERS';
+export const GET_FILTERED_ORDERS = 'GET_FILTERED_ORDERS';
+export const GET_AFTER_DELETE = 'GET_AFTER_DELETE';

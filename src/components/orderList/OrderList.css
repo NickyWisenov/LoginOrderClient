@@ -1,0 +1,49 @@
+.top-row {
+    position: relative;
+    margin-left: 20px;
+}
+
+.top-row label {
+    padding-top: 5px;
+    float: left;
+    padding-left: 30px;
+    padding-right: 10px;
+    font-weight: 700;
+}
+.top-row .week-select {
+    padding-left: 40px;
+    width: 100px;
+    margin-left: 10px;
+}
+
+.top-row h1 {
+    margin-left: 500px;
+}
+
+
+.order-list {
+    margin-left: -560px;
+}
+
+table {
+    margin-top: 40px;
+    font-size: 0.8rem;
+}
+
+table #total-row {
+    background-color: #96ceafbf;
+    font-weight: 700;
+}
+
+table .location-cell:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    background-color: #0808081f;
+}
+
+.calendar-div {
+    position: absolute;
+    left: 202px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 5px 3px #d0cdcd;
+}

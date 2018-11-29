@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { GET_MOVIES, GET_ERRORS,GET_ORDERED, GET_ORDERS, GET_FILTERED_ORDERS, GET_AFTER_DELETE } from './types';
+import { GET_MOVIES, GET_ERRORS,GET_ORDERED, GET_ORDERS, GET_FILTERED_ORDERS, GET_AFTER_DELETE, EDIT_ORDER } from './types';
 const apiUrl = 'http://127.0.0.1:4000/api/orders';
 
 export const  getMovies = () => {
     return (dispatch) => {
         return axios.post(`${apiUrl}/getmovies`)
             .then(response => {
+
                 dispatch(getMoviesList(response.data));
             })
             .catch(err => {
@@ -54,6 +55,7 @@ export const getOrders = (userId) => {
     return (dispatch) => {
         return axios.get(`${apiUrl}/getOrders/` + userId)
         .then( response => {
+            console.log(response);
             dispatch({
                 type:GET_ORDERS,
                 payload: response.data
@@ -84,8 +86,6 @@ export const deleteOrder = (orders_after_delete, order_id) => {
         return axios.delete(`${apiUrl}/${order_id}`)
         .then( response => {
             if (response.data.result == "success") {
-            console.log(orders_after_delete);
-
                 dispatch({
                     type: GET_AFTER_DELETE,
                     payload: orders_after_delete
@@ -103,3 +103,30 @@ export const deleteOrder = (orders_after_delete, order_id) => {
     }
 }
 
+export const editOrder = (history, orderToUpdate) => {
+    return (dispatch) => {
+        history.push('/order');
+        dispatch({
+            type: EDIT_ORDER,
+            payload: orderToUpdate
+        })
+    }
+}
+
+export const updateOrder = (history, orderId, orderData) => {
+    return (dispatch) => {
+        return axios.put(`${apiUrl}/${orderId}`, orderData)
+            .then(response => {
+                if (response.status == 200) {
+                    history.push('/orderlist');
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                dispatch({
+                    type: GET_ERRORS, 
+                    payload: err.response.data
+                })
+            })
+    }
+}

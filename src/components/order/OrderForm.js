@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { log } from 'util';
 
 class OrderForm extends React.Component {
     constructor(props) {
@@ -24,8 +25,6 @@ class OrderForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-
-    
     handleChange = (e) => {
         var  totalPrice = 0;
         for (let movieItem of this.movieRefs) {
@@ -48,7 +47,7 @@ class OrderForm extends React.Component {
             this.setState({
                 locationError: "Select the location"
             });
-        } 
+        }
 
         if (this.state.totalPrice == 0) {
             this.setState({
@@ -75,7 +74,11 @@ class OrderForm extends React.Component {
                 comment: document.getElementById('comment').value,
             }
 
-            this.props.onSaveOrder(orderData);
+            if (this.props.orders.isEditing) {
+                this.props.onUpdateOrder(this.props.history, this.props.orders.orderToUpdate[0].id, orderData)
+            } else {
+                this.props.onSaveOrder(orderData);
+            } 
         }
     }
 
@@ -87,13 +90,19 @@ class OrderForm extends React.Component {
 
     componentWillMount () {
         this.props.loadMovieList();
+
         if (this.props.movies.ordered) {
             this.props.history.push('/orderlist');
+        }
+        if (this.props.orders.isEditing) {
+            this.setState({
+                totalPrice: this.props.orders.orderToUpdate[0].totalPrice
+            });
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        
+
         if (nextProps.movies.ordered) {
             this.props.history.push('/orderlist');
         }
@@ -107,6 +116,7 @@ class OrderForm extends React.Component {
 
     render() {
         const { locations } = this.props.auth.locations;
+        const { orders, orderToUpdate, isEditing } = this.props.orders;
         const onLocationChange = this.onLocationChange;
         const setLocationRef = this.setLocationRef;
         const renderLocationSelect = function () {
@@ -115,13 +125,20 @@ class OrderForm extends React.Component {
                         className="col-sm-8 form-control" 
                         id="locations" 
                         name="location"
+                        defaultValue={isEditing ? orderToUpdate[0].locationId : 0}
                         ref = { setLocationRef }
                         onChange = { onLocationChange }
                     >
                         <option value="0">Choose Location</option>
                         {
                             locations.map((location, idx) => {
-                                return <option key={idx} value={location.id}>{location.city} - {location.country}</option>
+                                    return <option 
+                                                key={idx} 
+                                                value={location.id}
+                                            >
+                                                {location.city} - {location.country}
+                                            </option>
+                                
                             })
                         }
                     </select>
@@ -140,19 +157,42 @@ class OrderForm extends React.Component {
                                 <div key={idx} className="form-group row">
                                     <label htmlFor={movie.name} className="col-sm-4 col-form-label">{movie.name}</label>
                                     <div className="col-sm-3">
-                                        <input  
-                                            data-price={movie.price}
-                                            data-id={movie.id}
-                                            name={"movie[" + movie.id + "]"} 
-                                            defaultValue={0} 
-                                            type="number" 
-                                            className="form-control" 
-                                            id={movie.name} 
-                                            style={{textAlign: "center"}} 
-                                            onChange={handleChange}
-                                            ref = { setMovieRefs }
-                                            min={0}
-                                        />
+                                        {
+                                            isEditing ?
+                                                <input
+                                                    data-price={movie.price}
+                                                    data-id={movie.id}
+                                                    name={"movie[" + movie.id + "]"}
+                                                    type="number"
+                                                    className="form-control"
+                                                    id={movie.name}
+                                                    style={{textAlign: "center"}}
+                                                    onChange={handleChange}
+                                                    ref = { setMovieRefs }
+                                                    min={0}
+                                                    defaultValue={
+                                                        orderToUpdate[0].quantities.find(x => x.movie_id === movie.id) != null ? 
+                                                            orderToUpdate[0].quantities.find(x => x.movie_id === movie.id).quantity
+                                                            : 
+                                                            0
+                                                    }
+                                                />
+                                                :
+                                                <input
+                                                    data-price={movie.price}
+                                                    data-id={movie.id}
+                                                    name={"movie[" + movie.id + "]"}
+                                                    defaultValue={0}
+                                                    type="number"
+                                                    className="form-control"
+                                                    id={movie.name}
+                                                    style={{textAlign: "center"}}
+                                                    onChange={handleChange}
+                                                    ref = { setMovieRefs }
+                                                    min={0}
+                                                />
+                                        }
+                                        
                                     </div>
                                 </div>
                             )
@@ -165,7 +205,12 @@ class OrderForm extends React.Component {
         return (
             <div className="order-form">
                 <form id="orderForm">
-                    <h1>Order Movie</h1>
+                    {
+                        this.props.orders.isEditing ?
+                            <h1>Update Movie</h1>
+                            :
+                            <h1>Order Movie</h1>
+                    }
                     {/* Locations Select */}
                     <div className="form-group row">
                         <label className="col-sm-4 col-form-label" htmlFor="inlineFormCustomSelect">Locations</label>
@@ -195,7 +240,14 @@ class OrderForm extends React.Component {
                     <div className="form-group row">
                         <label htmlFor="total-price" className="col-sm-4 col-form-label"><strong>Total Price</strong></label>
                         <div className="col-sm-3">
-                            <input type="text" className="form-control-plaintext" id="total-price" value={this.state.totalPrice} style={{textAlign: "center",backgroundColor:"#76b0f5"}} readOnly/>
+                            <input 
+                                type="text" 
+                                className="form-control-plaintext" 
+                                id="total-price" 
+                                value={this.state.totalPrice} 
+                                style={{textAlign: "center",backgroundColor:"#76b0f5"}} 
+                                readOnly
+                            />
                         </div>
                     </div>
                     {
@@ -210,7 +262,13 @@ class OrderForm extends React.Component {
                     <div className="form-group">
                         <label htmlFor="comment" className="comment">Comment</label>
                         <div>
-                            <textarea className="form-control" id="comment" placeholder="Please Leave your Comment..."></textarea>
+                            <textarea 
+                                className="form-control" 
+                                id="comment" 
+                                placeholder="Please Leave your Comment..." 
+                                defaultValue={isEditing ? orderToUpdate[0].comment : ""}
+                            >
+                            </textarea>
                         </div>
                     </div>
 
@@ -227,15 +285,18 @@ class OrderForm extends React.Component {
 OrderForm.propTypes = {
     loadMovieList: PropTypes.func.isRequired,
     onSaveOrder: PropTypes.func.isRequired,
+    onUpdateOrder: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
     movies: PropTypes.object.isRequired,
+    orders: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
     auth: state.auth,
     errors: state.errors,
     movies: state.movies,
+    orders: state.orders
 });
 
 export default connect(mapStateToProps)(OrderForm);

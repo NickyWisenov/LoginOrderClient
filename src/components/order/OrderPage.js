@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { getMovies, saveOrder } from '../../actions/orderActions';
+import { getMovies, saveOrder, updateOrder } from '../../actions/orderActions';
 import OrderForm from './OrderForm';
 
 const mapDispatchToProps = dispatch => {
@@ -9,7 +9,10 @@ const mapDispatchToProps = dispatch => {
       },
       onSaveOrder: orderData => {
         dispatch(saveOrder(orderData));
-      }     
+      },
+      onUpdateOrder: (history, orderId, orderData) => {
+        dispatch(updateOrder(history, orderId, orderData));
+      }
     }
   );
 };

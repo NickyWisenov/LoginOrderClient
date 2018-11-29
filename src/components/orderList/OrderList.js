@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getOrders, getMovies, filterWeek, deleteOrder } from '../../actions/orderActions';
+import { getOrders, getMovies, filterWeek, deleteOrder, editOrder } from '../../actions/orderActions';
 import './OrderList.css'
 
 import DayPicker from 'react-day-picker'
@@ -74,7 +74,7 @@ class OrderList extends React.Component {
     handleEdit (order_id, e) {
         const { orders } = this.props.orders;
         const orderToUpdate = orders.filter(order => order.id === order_id);
-        console.log(orderToUpdate);
+        this.props.onEditRequest(this.props.history, orderToUpdate);
     }
 
     render() {
@@ -244,6 +244,9 @@ const mapDispatchToProps = dispatch => {
         },
         onDeleteRequest: (orders_after_delete, order_id) => {
             dispatch(deleteOrder(orders_after_delete, order_id));
+        },
+        onEditRequest: (history, orderToUpdate) => {
+            dispatch(editOrder(history, orderToUpdate));
         }
     })
 }

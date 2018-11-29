@@ -5,3 +5,4 @@ export const GET_ORDERED = 'GET_ORDERED';
 export const GET_ORDERS = 'GET_ORDERS';
 export const GET_FILTERED_ORDERS = 'GET_FILTERED_ORDERS';
 export const GET_AFTER_DELETE = 'GET_AFTER_DELETE';
+export const EDIT_ORDER = 'EDIT_ORDER';

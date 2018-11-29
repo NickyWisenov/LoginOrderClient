@@ -43,7 +43,8 @@ table .location-cell:hover {
 
 .calendar-div {
     position: absolute;
-    left: 202px;
+    left: 241px;
     border: 1px solid #e8e8e8;
     box-shadow: 5px 3px #d0cdcd;
+    top: 0px;
 }

@@ -113,7 +113,6 @@ class OrderForm extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-
         if(nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
@@ -122,7 +121,6 @@ class OrderForm extends React.Component {
     }
 
     render() {
-        console.log(this.state.errors);
         const { locations } = this.props.auth.locations;
         const { orders, orderToUpdate, isEditing } = this.props.orders;
         const onLocationChange = this.onLocationChange;

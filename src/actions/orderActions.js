@@ -70,12 +70,22 @@ export const getOrders = (userId) => {
     }
 }
 
-export const filterWeek = (orders) => {
+export const filterWeek = (userId, week) => {
     return (dispatch) => {
-        // console.log(orders);
-        dispatch({
-            type: GET_FILTERED_ORDERS,
-            payload: orders
+        return axios.post(`${apiUrl}/getOrdersByWeek/` + week, {
+            userId: userId
+        })
+        .then(response => {
+            dispatch({
+                type: GET_FILTERED_ORDERS,
+                payload: response.data
+            })
+        })
+        .catch(err => {
+            dispatch({
+                type:GET_ERRORS,
+                payload: err.response.data
+            })
         })
     }
 }

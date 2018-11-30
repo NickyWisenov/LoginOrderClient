@@ -55,9 +55,8 @@ class OrderList extends React.Component {
     };
 
     handleClick () {
-        const { orders } = this.props.orders;
+        this.props.onfilterWeek(this.props.auth.user.id, this.state.selectedWeek);
 
-        this.props.onfilterWeek(orders.filter(order => order.week === this.state.selectedWeek))
         this.setState({
             showCalendar: "none",
         })
@@ -77,12 +76,26 @@ class OrderList extends React.Component {
     handleEdit (order_id, e) {
         const { orders } = this.props.orders;
         const orderToUpdate = orders.filter(order => order.id === order_id);
+
+        const now = new Date();
+        var onejan = new Date(now.getFullYear(), 0, 1);
+        var current_week = Math.ceil((((now - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+
+        if (orderToUpdate[0].week != current_week) {
+            alert("You can't edit previous week order");
+            return;
+        }
+
         this.props.onEditRequest(this.props.history, orderToUpdate);
     }
 
+    handleRefresh () {
+        window.location = "/orderlist";
+    }
     render() {
+        
         const { movies } = this.props.movies;
-        // Render Order List'
+        // Render Order List
         const { orders } = this.props.orders;
         
         const totalNumber = function (movie_id) {
@@ -123,6 +136,7 @@ class OrderList extends React.Component {
                         value={this.state.selectedWeek}
                     />
 
+
                     <div className="calendar-div" style={{display: this.state.showCalendar}}>
                         <DayPicker
                             showWeekNumbers
@@ -139,6 +153,9 @@ class OrderList extends React.Component {
                     </div>
                     
                     <h1>Order List</h1>
+
+                    <button style={{float: "right", marginRight: "-500px"}} onClick={this.handleRefresh}>Refresh</button>
+
                 </div>
                 <table className="table table-hover">
                     <thead className="thead-dark">
@@ -157,38 +174,43 @@ class OrderList extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map((order, idx) => (
-                            <tr key={idx}>
-                                <td>{order.week}</td>
-                                <td onClick={e => this.handleEdit(order.id, e)} className="location-cell">
-                                    {order.location}
-                                </td>
-                                {
-                                    movies.map((movie, idx) => {
-                                        return (
-                                            <td key={idx}>
-                                                {
-                                                    order.quantities.find(item => item.movie_id === movie.id) != null ?
-                                                    order.quantities.find(item => item.movie_id === movie.id).quantity
-                                                    :
-                                                    ""
-                                                }
-                                            </td>    
-                                        )
-                                    })
-                                }
-                                <td>{order.totalQuantity}</td>
-                                <td>{order.totalPrice}</td>
-                                <td>{order.comment}</td>
-                                <td>
-                                    <button
-                                        onClick={e => this.handleDelete(order.id, e)}
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {
+                            orders.length == 0 ? 
+                                <tr><td colSpan="24" style={{textAlign:"center",fontSize: "1vw"}}>No Orders</td></tr> 
+                                :
+                                orders.map((order, idx) => (
+                                    <tr key={idx}>
+                                        <td>{order.week}</td>
+                                        <td onClick={e => this.handleEdit(order.id, e)} className="location-cell">
+                                            {order.location}
+                                        </td>
+                                        {
+                                            movies.map((movie, idx) => {
+                                                return (
+                                                    <td key={idx}>
+                                                        {
+                                                            order.quantities.find(item => item.movie_id === movie.id) != null ?
+                                                            order.quantities.find(item => item.movie_id === movie.id).quantity
+                                                            :
+                                                            ""
+                                                        }
+                                                    </td>    
+                                                )
+                                            })
+                                        }
+                                        <td>{order.totalQuantity}</td>
+                                        <td>{order.totalPrice}</td>
+                                        <td>{order.comment}</td>
+                                        <td>
+                                            <button
+                                                onClick={e => this.handleDelete(order.id, e)}
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         <tr key="total" id="total-row">
                             <td></td>
                             <td>Total</td>
@@ -242,8 +264,8 @@ const mapDispatchToProps = dispatch => {
         loadMovieList: () => {
             dispatch(getMovies());
         },
-        onfilterWeek: (filtered_orders) => {
-            dispatch(filterWeek(filtered_orders));
+        onfilterWeek: (userId, week) => {
+            dispatch(filterWeek(userId, week));
         },
         onDeleteRequest: (orders_after_delete, order_id) => {
             dispatch(deleteOrder(orders_after_delete, order_id));

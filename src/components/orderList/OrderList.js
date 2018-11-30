@@ -26,6 +26,9 @@ class OrderList extends React.Component {
     }
 
     componentWillMount () {
+        if (!localStorage.jwtToken) {
+			window.location.href = '/login'
+		}
         this.props.loadOrderList(this.props.auth.user.id);
         this.props.loadMovieList();
     }

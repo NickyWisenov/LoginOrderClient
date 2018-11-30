@@ -8,10 +8,13 @@ class WelcomePage extends React.Component {
 		this.state = {
 			errors: {}
 		};
-
 	}
 
-
+	componentWillMount() {
+		if (!localStorage.jwtToken) {
+			window.location.href = '/login'
+		}
+	}
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.errors) {
 			this.setState({

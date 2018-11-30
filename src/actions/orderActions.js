@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { GET_MOVIES, GET_ERRORS,GET_ORDERED, GET_ORDERS, GET_FILTERED_ORDERS, GET_AFTER_DELETE, EDIT_ORDER } from './types';
+import { GET_MOVIES, GET_ERRORS,GET_ORDERED, GET_ORDERS, GET_FILTERED_ORDERS, GET_AFTER_DELETE, EDIT_ORDER, GET_EMPTY_ERRORS } from './types';
 const apiUrl = 'http://127.0.0.1:4000/api/orders';
 
 export const  getMovies = () => {
     return (dispatch) => {
         return axios.post(`${apiUrl}/getmovies`)
             .then(response => {
-
                 dispatch(getMoviesList(response.data));
             })
             .catch(err => {
@@ -26,16 +25,17 @@ export const getMoviesList = (response) => {
     }
 }
 
-export const saveOrder = (orderData) => {
+export const saveOrder = (history, orderData) => {
     return (dispatch) => {
         return axios.post(`${apiUrl}`, orderData)
             .then(response => {
                 if (response.status == 200) {
-                    dispatch(onOrdered(response));
+                    history.push('/orderlist');
+                    // dispatch(onOrdered(response));
                 }
             })
             .catch(err => {
-                console.log(err);
+                console.log(err.response.data);
                 dispatch({
                     type: GET_ERRORS,
                     payload: err.response.data
@@ -55,7 +55,6 @@ export const getOrders = (userId) => {
     return (dispatch) => {
         return axios.get(`${apiUrl}/getOrders/` + userId)
         .then( response => {
-            console.log(response);
             dispatch({
                 type:GET_ORDERS,
                 payload: response.data
@@ -128,5 +127,14 @@ export const updateOrder = (history, orderId, orderData) => {
                     payload: err.response.data
                 })
             })
+    }
+}
+
+export const removeErrors = () => {
+    return (dispatch) => {
+        dispatch({
+            type: GET_EMPTY_ERRORS,
+            payload: {}
+        })
     }
 }

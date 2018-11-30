@@ -13,7 +13,7 @@ export default function (state = initialState, action) {
                 ...state,
                 orders: action.payload,
                 isEditing: false,
-                orderToUpdate: null
+                orderToUpdate: null,
             }
         case GET_FILTERED_ORDERS:
             return {

@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { log } from 'util';
+
+import isEmpty from '../../helper/is_empty';
 
 class OrderForm extends React.Component {
     constructor(props) {
         super(props);
-
+        // Refs to interact32 with dom
         this.movieRefs = [];
         this.setMovieRefs = element => {
             this.movieRefs.push(element);
@@ -15,11 +16,12 @@ class OrderForm extends React.Component {
         this.setLocationRef = element => {
             this.locationRef = element;
         }
+
         this.state = {
             totalPrice: 0,
-            errors: {},
+            errors: null,
             locationError: "",
-            priceError: ""
+            priceError: "",
         };
         
         this.handleChange = this.handleChange.bind(this);
@@ -56,6 +58,10 @@ class OrderForm extends React.Component {
         }
 
         if (this.locationRef.value != 0 && this.state.totalPrice != 0) {
+            this.setState({
+                errors: {}
+            });
+
             const moviesList = [];
             for (let movieItem of this.movieRefs) {
                 if (movieItem.value != 0) {
@@ -73,12 +79,15 @@ class OrderForm extends React.Component {
                 orderedBy: this.props.auth.user.id,
                 comment: document.getElementById('comment').value,
             }
+            
+            
 
             if (this.props.orders.isEditing) {
                 this.props.onUpdateOrder(this.props.history, this.props.orders.orderToUpdate[0].id, orderData)
             } else {
-                this.props.onSaveOrder(orderData);
-            } 
+                console.log(orderData);
+                this.props.onSaveOrder(this.props.history, orderData);
+            }
         }
     }
 
@@ -89,11 +98,13 @@ class OrderForm extends React.Component {
     }
 
     componentWillMount () {
-        this.props.loadMovieList();
-
-        if (this.props.movies.ordered) {
-            this.props.history.push('/orderlist');
+        // Prevent direct route from out without login
+        if (!localStorage.jwtToken) {
+			window.location.href = '/login'
         }
+        this.props.loadMovieList();
+        this.props.onRemoveErrors();
+
         if (this.props.orders.isEditing) {
             this.setState({
                 totalPrice: this.props.orders.orderToUpdate[0].totalPrice
@@ -103,10 +114,6 @@ class OrderForm extends React.Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (nextProps.movies.ordered) {
-            this.props.history.push('/orderlist');
-        }
-
         if(nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
@@ -115,6 +122,7 @@ class OrderForm extends React.Component {
     }
 
     render() {
+        console.log(this.state.errors);
         const { locations } = this.props.auth.locations;
         const { orders, orderToUpdate, isEditing } = this.props.orders;
         const onLocationChange = this.onLocationChange;
@@ -125,7 +133,7 @@ class OrderForm extends React.Component {
                         className="col-sm-8 form-control" 
                         id="locations" 
                         name="location"
-                        defaultValue={isEditing ? orderToUpdate[0].locationId : 0}
+                        defaultValue = {isEditing ? orderToUpdate[0].locationId : 0}
                         ref = { setLocationRef }
                         onChange = { onLocationChange }
                     >
@@ -204,13 +212,23 @@ class OrderForm extends React.Component {
 
         return (
             <div className="order-form">
+                {
+                    this.props.orders.isEditing ?
+                        <h1>Update Movie</h1>
+                        :
+                        <h1>Order Movie</h1>
+                }
+                {
+                    console.log(isEmpty(this.state.errors))
+                }
+                {
+                    !isEmpty(this.state.errors) ?
+                        <div className="alert alert-danger row" role="alert">Sorry, You can not order twice for same location in the same week</div>
+                        :
+                        ""
+                }
                 <form id="orderForm">
-                    {
-                        this.props.orders.isEditing ?
-                            <h1>Update Movie</h1>
-                            :
-                            <h1>Order Movie</h1>
-                    }
+                    
                     {/* Locations Select */}
                     <div className="form-group row">
                         <label className="col-sm-4 col-form-label" htmlFor="inlineFormCustomSelect">Locations</label>
@@ -286,6 +304,7 @@ OrderForm.propTypes = {
     loadMovieList: PropTypes.func.isRequired,
     onSaveOrder: PropTypes.func.isRequired,
     onUpdateOrder: PropTypes.func.isRequired,
+    onRemoveErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
     movies: PropTypes.object.isRequired,
